@@ -1,1 +1,53 @@
+\documentclass[11pt]{article}
 
+\usepackage{authblk}
+\usepackage{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{siunitx}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage[nottoc,numbib]{tocbibind}
+\usepackage{biblatex}
+
+\bibliography{ref.bib}
+
+\newcommand{\email}[1]{\texttt{\href{mailto:#1}{#1}}}
+
+\title{COMP4420 Project Proposal: Sarcasm Detection}
+\author{
+    Bui, Nam \\
+    \email{nam\_bui@student.uml.edu}
+    % \and
+    % Put names here
+}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+% Sentiment analysis
+
+% The difficulty of determining sarcasm
+% e.g. sentence in one context may be sarcastic while in another context may be serious
+
+\section{Dataset}
+
+The dataset used will be a collection of
+tagged newspaper headlines \cite{misra2023Sarcasm}.
+
+% Structure of data in dataset
+% When and how dataset was collected
+
+\section{Evaluation Method}
+
+% Since it's classification, F1 is a decent metric
+
+\printbibliography
+
+\end{document}
