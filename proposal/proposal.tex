@@ -85,6 +85,21 @@ precision, recall, and F1 are good metrics to use.
 Accuracy will also be used to compare findings
 to results from Misra et al. \cite{misra2023Sarcasm}.
 
+\section{Timeline}
+% Split data into training, dev, and test (70/10/20)
+First, the dataset will be split into training, development, and test sets
+with a 70/10/20 split.
+% Baseline: Naive Bayes w/ one-hot encoding
+For the baseline model,
+we will use a Naive-Bayes with one-hot encoding.
+% Fine-tune word2vec for dataset
+After training and evaluating the baseline model,
+we would like to fine-tune word2vec to the headline-specific words.
+% DAN + RNN w/ LSTM
+Once the word embeddings have been fine tuned,
+we would like to train and evaluate either a
+DAN or LSTM model.
+
 \printbibliography
 
 \end{document}
