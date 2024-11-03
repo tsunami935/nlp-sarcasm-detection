@@ -75,8 +75,10 @@ fields of computational linguistics and machine learning.}
 
 \section{Dataset}
 
-The dataset used will be a collection of
-tagged newspaper headlines \cite{misra2023Sarcasm}.
+\par{The dataset we plan on using for this project is a collection of 28,619
+tagged newspaper headlines-- of which 13,635 are from the satirical publication
+\textit{The Onion}, the other 14,984 being from the non-satirical publication
+\textit{The Huffington Post} \cite{misra2023Sarcasm}.}
 
 % Structure of data in dataset
 % When and how dataset was collected
@@ -90,37 +92,33 @@ tagged newspaper headlines \cite{misra2023Sarcasm}.
 \section{Evaluation Method}
 
 % Will be interesting to do some EDA
-Since the dataset was created in 2016,
-during a period of political turmoil,
-there may be some bias in the data.
-It will be interesting to see what words
-have the highest correlation with a sarcastic headline.
+\par{Since the dataset was created in 2016 during a period of political
+turmoil, there may be some bias in the data. It will be interesting to see what
+words are most strongly correlated with sarcastic headlines.}
+
 % News tends to have a lot of named entities,
 % So it may be useful to have some NER
-Additionally, news headlines usually have a lot of proper nouns,
-so it may help to use named entity recognition when encoding the headlines.
+\par{Additionally, news headlines usually have a lot of proper nouns, so it may
+help to use named entity recognition when encoding the headlines.}
 
 % Models to test:
 % "Traditional" models like Naive Bayes (IIRC I got >80% acc w/ NB and one-hot encoding in 2020)
 % Context-independent NN like DAN
 % Context-sensitive RNN w/ attention has been shown to perform well on this task
-Sentiment analysis is a core natural language processing task
-so there is a lot of data available on what types of models work.
-We plan on using several for this project.
-Naive Bayes classifiers are lightweight models that have
-traditionally been used in sentiment analysis.
-Deep averaging networks are able to leverage the universal approximation properties
-of neural networks, but are lightweight since they don't capture context.
-In recent years, recurrent neural networks have gained popularity
-due to their ability to capture context with the attention mechanism.
-Since news headlines are often one or two sentences,
-there is not much need to capture long distance dependencies.
+\par{Sentiment analysis is a core natural language processing task, so there is
+a lot of data available on what types of models are effective. We plan on using
+several for this project. Naive Bayes classifiers are lightweight models that
+have traditionally been used in sentiment analysis. Deep averaging networks are
+able to leverage the universal approximation properties of neural networks, but
+are lightweight since they don't capture context. In recent years, recurrent
+neural networks have gained popularity due to their ability to capture context
+with the attention mechanism. Since news headlines are often one or two
+sentences, there is not much need to capture long distance dependencies.}
 
 % Since it's classification, F1 is a decent metric
-Since the task is a binary classification task,
-precision, recall, and F1 are good metrics to use.
-Accuracy will also be used to compare findings
-to results from Misra et al. \cite{misra2023Sarcasm}.
+\par{Since the task at hand is binary classification, precision, recall, and F1
+are good metrics to use. Accuracy will also be used to compare findings to
+results from Misra et al \cite{misra2023Sarcasm}.}
 
 \printbibliography
 
