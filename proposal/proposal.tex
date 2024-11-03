@@ -34,16 +34,16 @@
 
 \section{Introduction}
 
-\par{Sarcasm is a feature of natural language that is notoriously difficult to
+Sarcasm is a feature of natural language that is notoriously difficult to
 define and identify in both the spoken and written word. The assumption that a
 statement will be recognized as sarcastic is typically contingent upon the
 listener/reader knowing some outside piece of contextual information
 beforehand. However, this external information isn't always known, and even
 when it is, the relationship between it and the statement at hand may not
 always be clear. When this happens, the meaning can be obscured as a result,
-often leading to avoidable scenarios involving miscommunication.}
+often leading to avoidable scenarios involving miscommunication.
 
-\par{Recognizing sarcasm typically involves picking up on subtle cues and
+Recognizing sarcasm typically involves picking up on subtle cues and
 nuance that can be difficult to identify. This can often pose a challenge for
 populations who encounter greater difficulty when processing certain aspects of
 a language. For example, someone trying to interpret a language they don't
@@ -54,9 +54,9 @@ inform the established meaning of the locally spoken language can also be a
 source of confusion. In addition, many neurodivergent people, in particular
 those with autism, can struggle to recognize and/or communicate certain social
 cues in conversation due to differences between their cognitive experience of
-language and what is expected of them.}
+language and what is expected of them.
 
-\par{Finally, there are unique challenges faced in detecting sarcasm in the
+Finally, there are unique challenges faced in detecting sarcasm in the
 written word. It is often possible in practice to infer a statement is
 sarcastic, even without necessarily having the context to understand
 \textit{why} by listening to changes in the tone of the speaker. However, when
@@ -66,7 +66,7 @@ Internet now being extremely important to modern infrastructure, and with text
 being the predominant medium for online communication, this problem has become
 increasingly apparent over the years. This project shall explore and contrast
 different approaches to disambiguating sarcasm by applying concepts from the
-fields of computational linguistics and machine learning.}
+fields of computational linguistics and machine learning.
 
 % Sentiment analysis
 
@@ -75,10 +75,10 @@ fields of computational linguistics and machine learning.}
 
 \section{Dataset}
 
-\par{The dataset we plan on using for this project is a collection of 28,619
+The dataset we plan on using for this project is a collection of 28,619
 tagged newspaper headlines-- of which 13,635 are from the satirical publication
 \textit{The Onion}, the other 14,984 being from the non-satirical publication
-\textit{The Huffington Post} \cite{misra2023Sarcasm}.}
+\textit{The Huffington Post} \cite{misra2023Sarcasm}.
 
 % Structure of data in dataset
 % When and how dataset was collected
@@ -92,20 +92,20 @@ tagged newspaper headlines-- of which 13,635 are from the satirical publication
 \section{Evaluation Method}
 
 % Will be interesting to do some EDA
-\par{Since the dataset was created in 2016 during a period of political
+Since the dataset was created in 2016 during a period of political
 turmoil, there may be some bias in the data. It will be interesting to see what
-words are most strongly correlated with sarcastic headlines.}
+words are most strongly correlated with sarcastic headlines.
 
 % News tends to have a lot of named entities,
 % So it may be useful to have some NER
-\par{Additionally, news headlines usually have a lot of proper nouns, so it may
-help to use named entity recognition when encoding the headlines.}
+Additionally, news headlines usually have a lot of proper nouns, so it may
+help to use named entity recognition when encoding the headlines.
 
 % Models to test:
 % "Traditional" models like Naive Bayes (IIRC I got >80% acc w/ NB and one-hot encoding in 2020)
 % Context-independent NN like DAN
 % Context-sensitive RNN w/ attention has been shown to perform well on this task
-\par{Sentiment analysis is a core natural language processing task, so there is
+Sentiment analysis is a core natural language processing task, so there is
 a lot of data available on what types of models are effective. We plan on using
 several for this project. Naive Bayes classifiers are lightweight models that
 have traditionally been used in sentiment analysis. Deep averaging networks are
@@ -113,12 +113,12 @@ able to leverage the universal approximation properties of neural networks, but
 are lightweight since they don't capture context. In recent years, recurrent
 neural networks have gained popularity due to their ability to capture context
 with the attention mechanism. Since news headlines are often one or two
-sentences, there is not much need to capture long distance dependencies.}
+sentences, there is not much need to capture long distance dependencies.
 
 % Since it's classification, F1 is a decent metric
-\par{Since the task at hand is binary classification, precision, recall, and F1
+Since the task at hand is binary classification, precision, recall, and F1
 are good metrics to use. Accuracy will also be used to compare findings to
-results from Misra et al \cite{misra2023Sarcasm}.}
+results from Misra et al \cite{misra2023Sarcasm}.
 
 \printbibliography
 
