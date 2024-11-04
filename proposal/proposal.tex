@@ -88,26 +88,26 @@ for marking if the headline is sarcastic (1) or not (0), the text of the headlin
 a link to the article so that other information can be gathered if desired.
 
 % When and how dataset was collected
-% Headlines collected from TheOnion (sarcastic) and Huffington Post (not-sarcastic)
+% Headlines collected from The Onion (sarcastic) and The Huffington Post (not-sarcastic)
 Data was collected from two news sources, namely the Onion, who focuses on sarcastic
-news parodies, and the Huffington Post, who is a sincere media company. This data was
+news parodies, and The Huffington Post, who is a sincere media company. This data was
 then updated in July 2019 to include more recent headlines.
 
-
 % Headlines from sources do not intersect (self-contained)
-This dataset has advantages over general text like that which could be found on twitter
-or other socia media platforms because the writing is formal in nature. This means there
-are less words outside of the word2vec vocabulary, less spelling mistakes, and little to
-no slang usage. Also, because the Onion is openly sarcastic, the labelling process is easy 
-and correct, because there is no doubting the use of sarcasm in the headlines.
+This dataset has advantages over text that could be found on social
+media platforms because news text is formal in nature. This means there
+are less words outside of the word2vec vocabulary, less spelling mistakes, 
+and little to no slang usage. Also, because The Onion is openly sarcastic 
+by design, there is no ambiguity regarding if labels are correct.
 
 % Limitation of dataset: Only two news sources
-% Additionally, sarcastic headlines from TheOnion are obviously sarcastic,
+% Additionally, sarcastic headlines from The Onion are obviously sarcastic,
 % so more subtle sarcasm is not captured in the dataset
-However, there are downsides to news headline data. In this case, there are only two sources
-being used, and the model could pick up on writing syles or other details instead of sarcasm.
-There is another potential issue that stems from the Onion's blatant use of sarcasm. In more
+However, there are downsides to news headline data. In this case, there are only two news sources
+being used, and the model could pick up on writing styles or other details instead of sarcasm.
+There is another potential issue that stems from The Onion's obvious use of sarcasm. In more 
 nuanced cases where sarcasm is more subtle, a model could do poorly.
+
 
 
 \section{Evaluation Method}
