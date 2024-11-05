@@ -26,6 +26,9 @@
 \usepackage{subcaption}
 \usepackage[nottoc,numbib]{tocbibind}
 
+% other packages
+\usepackage{parskip}
+
 \pagestyle{fancy}
 
 \newcommand{\email}[1]{\texttt{\href{mailto:#1}{#1}}}
@@ -91,10 +94,19 @@ newspaper headlines-- of which 13,635 are from the satirical publication
 \textit{The Huffington Post} \cite{misra2023Sarcasm}.
 
 % Structure of data in dataset
-The data for each headline is grouped into three characteristics. There is a
-boolean for marking if the headline is sarcastic (1) or not (0), the text of
-the headline, and a link to the article so that other information can be
-gathered if desired.
+For each headline, the dataset contains a JSON object with three attributes:
+\begin{itemize}
+    \item \texttt{is\_sarcastic} (integer): the headline's label-- 1 if
+        sarcastic, 0 if not.
+    \item \texttt{headline} (string): the text of the headline, case-converted
+        to be all lowercase.
+    \item \texttt{article\_link} (string): the URL of the referenced article.
+\end{itemize}
+
+This project will attempt to use the contents of \texttt{headline} to predict
+the value of \texttt{is\_sarcastic}. Values of \texttt{article\_link} will not
+be used directly for the purposes of modeling sarcasm, but may be useful when
+attempting to decipher why certain models made certain predictions.
 
 % When and how dataset was collected
 % Headlines collected from The Onion (sarcastic) and HuffPost (sincere)
