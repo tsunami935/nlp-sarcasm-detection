@@ -1,38 +1,51 @@
 \documentclass[11pt]{article}
 
-\usepackage{authblk}
-\usepackage{hyperref}
-\usepackage[utf8]{inputenc}
+% packages from hadi's template
+\usepackage{bbm}
 \usepackage{amsmath}
-\usepackage{amsfonts}
 \usepackage{amssymb}
-\usepackage{siunitx}
+\usepackage{amsthm}
+% \usepackage{chngpage}
+\usepackage{fancyhdr}
+\usepackage[margin=.7in]{geometry}
 \usepackage{graphicx}
-\usepackage{subcaption}
-\usepackage{float}
-\usepackage[nottoc,numbib]{tocbibind}
-\usepackage{biblatex}
+\usepackage{hyperref}
+% \usepackage{lscape}
+\usepackage{mathpazo}
+\usepackage{stmaryrd}
+% \usepackage{subfigure}
+\usepackage{url}
 
-\bibliography{ref.bib}
+% packages from nam's template
+\usepackage{authblk}
+\usepackage{amsfonts}
+% \usepackage{biblatex}
+\usepackage{float}
+\usepackage[utf8]{inputenc}
+\usepackage{siunitx}
+\usepackage{subcaption}
+\usepackage[nottoc,numbib]{tocbibind}
+
+\pagestyle{fancy}
 
 \newcommand{\email}[1]{\texttt{\href{mailto:#1}{#1}}}
 
-\title{COMP4420 Project Proposal: Sarcasm Detection}
-\author{
-    Bui, Nam \\
-    \email{nam\_bui@student.uml.edu}
-    \and
-    Sam, Zuk \\
-    \email {samuel\_zuk@student.uml.edu}
-    Conners, Riley \\
-    \email {riley_conners@student.uml.edu}
-    % \and
-    % Put names here
-}
+\lhead{\textbf{Project Proposal}}
+\rhead{\textbf{COMP.4420/5420, UMASS Lowell}}
+
+\def\proptitle{COMP4420 Project Proposal: Sarcasm Detection}
+\def\propauthors{Bui, Nam (\#01963609), 
+                 Conners, Riley (\#01943861), 
+                 Zuk, Sam (\#01642608)}
 
 \begin{document}
 
-\maketitle
+\begin{center}
+    \textbf{\Large{\proptitle}} \\
+    \textbf{\underline{\propauthors}}
+\end{center}
+
+\bigskip
 
 \section{Introduction}
 
@@ -45,8 +58,8 @@ when it is, the relationship between it and the statement at hand may not
 always be clear. When this happens, the meaning can be obscured as a result,
 often leading to avoidable scenarios involving miscommunication.
 
-Recognizing sarcasm typically involves picking up on subtle cues and
-nuance that can be difficult to identify. This can often pose a challenge for
+Recognizing sarcasm typically involves picking up on subtle cues and nuance
+that can be difficult to identify. This can often pose a challenge for
 populations who encounter greater difficulty when processing certain aspects of
 a language. For example, someone trying to interpret a language they don't
 speak natively will likely have to expend more mental effort to parse out
@@ -58,76 +71,73 @@ those with autism, can struggle to recognize and/or communicate certain social
 cues in conversation due to differences between their cognitive experience of
 language and what is expected of them.
 
-Finally, there are unique challenges faced in detecting sarcasm in the
-written word. It is often possible in practice to infer a statement is
-sarcastic, even without necessarily having the context to understand
-\textit{why} by listening to changes in the tone of the speaker. However, when
-translated into the written word, some or all of this information is lost,
-making sarcasm even more difficult to detect when only text is given. With the
-Internet now being extremely important to modern infrastructure, and with text
-being the predominant medium for online communication, this problem has become
+Finally, there are unique challenges faced in detecting sarcasm in the written
+word. It is often possible in practice to infer a statement is sarcastic, even
+without necessarily having the context to understand \textit{why} by listening
+to changes in the tone of the speaker. However, when translated into the
+written word, some or all of this information is lost, making sarcasm even more
+difficult to detect when only text is given. With the Internet now being
+extremely important to modern infrastructure, and with text being the
+predominant medium for online communication, this problem has become
 increasingly apparent over the years. This project shall explore and contrast
 different approaches to disambiguating sarcasm by applying concepts from the
 fields of computational linguistics and machine learning.
 
-% Sentiment analysis
-
-% The difficulty of determining sarcasm
-% e.g. sentence in one context may be sarcastic while in another context may be serious
-
 \section{Dataset}
 
-The dataset we plan on using for this project is a collection of 28,619
-tagged newspaper headlines-- of which 13,635 are from the satirical publication
+The dataset we plan on using for this project is a collection of 28,619 tagged
+newspaper headlines-- of which 13,635 are from the satirical publication
 \textit{The Onion}, the other 14,984 being from the non-satirical publication
 \textit{The Huffington Post} \cite{misra2023Sarcasm}.
 
 % Structure of data in dataset
-The data for each headline is grouped into three characteristics. There is a boolean
-for marking if the headline is sarcastic (1) or not (0), the text of the headline, and
-a link to the article so that other information can be gathered if desired.
+The data for each headline is grouped into three characteristics. There is a
+boolean for marking if the headline is sarcastic (1) or not (0), the text of
+the headline, and a link to the article so that other information can be
+gathered if desired.
 
 % When and how dataset was collected
-% Headlines collected from The Onion (sarcastic) and The Huffington Post (not-sarcastic)
-Data was collected from two news sources, namely the Onion, who focuses on sarcastic
-news parodies, and The Huffington Post, who is a sincere media company. This data was
-then updated in July 2019 to include more recent headlines.
+% Headlines collected from The Onion (sarcastic) and HuffPost (sincere)
+Data was collected from two news sources, namely the Onion, who focuses on
+sarcastic news parodies, and The Huffington Post, who is a sincere media
+company. This data was then updated in July 2019 to include more recent
+headlines.
 
 % Headlines from sources do not intersect (self-contained)
-This dataset has advantages over text that could be found on social
-media platforms because news text is formal in nature. This means there
-are less words outside of the word2vec vocabulary, less spelling mistakes, 
-and little to no slang usage. Also, because The Onion is openly sarcastic 
-by design, there is no ambiguity regarding if labels are correct.
+This dataset has advantages over text that could be found on social media
+platforms because news text is formal in nature. This means there are less
+words outside of the word2vec vocabulary, less spelling mistakes, and little to
+no slang usage. Also, because The Onion is openly sarcastic by design, there is
+no ambiguity regarding if labels are correct.
 
 % Limitation of dataset: Only two news sources
 % Additionally, sarcastic headlines from The Onion are obviously sarcastic,
 % so more subtle sarcasm is not captured in the dataset
-However, there are downsides to news headline data. In this case, there are only two news sources
-being used, and the model could pick up on writing styles or other details instead of sarcasm.
-There is another potential issue that stems from The Onion's obvious use of sarcasm. In more 
-nuanced cases where sarcasm is more subtle, a model could do poorly.
-
-
+However, there are downsides to news headline data. In this case, there are
+only two news sources being used, and the model could pick up on writing styles
+or other details instead of sarcasm. There is another potential issue that
+stems from The Onion's obvious use of sarcasm. In more nuanced cases where
+sarcasm is more subtle, a model could do poorly.
 
 \section{Evaluation Method}
 
 % Will be interesting to do some EDA
-Since the dataset was created in 2016 during a period of political
-turmoil, there may be some bias in the data. It will be interesting to see what
-words are most strongly correlated with sarcastic headlines.
+Since the dataset was created in 2016 during a period of political turmoil,
+there may be some bias in the data. It will be interesting to see what words
+are most strongly correlated with sarcastic headlines.
 
 % News tends to have a lot of named entities,
 % So it may be useful to have some NER
-Additionally, news headlines usually have a lot of proper nouns, so it may
-help to use named entity recognition when encoding the headlines.
+Additionally, news headlines usually have a lot of proper nouns, so it may help
+to use named entity recognition when encoding the headlines.
 
 % Models to test:
-% "Traditional" models like Naive Bayes (IIRC I got >80% acc w/ NB and one-hot encoding in 2020)
+% "Traditional" models like Naive Bayes
+%   (Nam: IIRC I got >80% acc w/ NB and one-hot encoding in 2020)
 % Context-independent NN like DAN
 % Context-sensitive RNN w/ attention has been shown to perform well on this task
-Sentiment analysis is a core natural language processing task, so there is
-a lot of data available on what types of models are effective. We plan on using
+Sentiment analysis is a core natural language processing task, so there is a
+lot of data available on what types of models are effective. We plan on using
 several for this project. Naive Bayes classifiers are lightweight models that
 have traditionally been used in sentiment analysis. Deep averaging networks are
 able to leverage the universal approximation properties of neural networks, but
@@ -137,25 +147,27 @@ with the attention mechanism. Since news headlines are often one or two
 sentences, there is not much need to capture long distance dependencies.
 
 % Since it's classification, F1 is a decent metric
-Since the task at hand is binary classification, precision, recall, and F1
-are good metrics to use. Accuracy will also be used to compare findings to
-results from Misra et al \cite{misra2023Sarcasm}.
+Since the task at hand is binary classification, precision, recall, and F1 are
+good metrics to use. Accuracy will also be used to compare findings to results
+from Misra et al \cite{misra2023Sarcasm}.
 
 \section{Timeline}
 % Split data into training, dev, and test (70/10/20)
-First, the dataset will be split into training, development, and test sets
-with a 70/10/20 split.
-% Baseline: Naive Bayes w/ one-hot encoding
-For the baseline model,
-we will use a Naive-Bayes with one-hot encoding.
-% Fine-tune word2vec for dataset
-After training and evaluating the baseline model,
-we would like to fine-tune word2vec to the headline-specific words.
-% DAN + RNN w/ LSTM
-Once the word embeddings have been fine tuned,
-we would like to train and evaluate either a
-DAN or LSTM model.
+First, the dataset will be split into training, development, and test sets with
+a 70/10/20 split.
 
-\printbibliography
+% Baseline: Naive Bayes w/ one-hot encoding
+For the baseline model, we will use a Naive-Bayes with one-hot encoding.
+
+% Fine-tune word2vec for dataset
+After training and evaluating the baseline model, we would like to fine-tune
+word2vec to the headline-specific words.
+
+% DAN + RNN w/ LSTM
+Once the word embeddings have been fine tuned, we would like to train and
+evaluate either a DAN or LSTM model.
+
+\bibliographystyle{plain}
+\bibliography{ref}
 
 \end{document}
