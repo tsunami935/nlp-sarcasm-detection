@@ -9,3 +9,4 @@
 *.out
 *.xml
 *.gz
+*.pyc
