@@ -9,4 +9,11 @@
 *.out
 *.xml
 *.gz
+
+# python stuff
+__pycache__/
 *.pyc
+.venv
+
+# 3.4GB worth of embeddings we don't want in the source tree
+GoogleNews-vectors-negative300.bin
