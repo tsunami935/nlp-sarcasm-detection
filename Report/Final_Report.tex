@@ -1,1 +1,107 @@
-#Start here
+\documentclass[11pt]{article}
+
+% packages from hadi's template
+\usepackage{bbm}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+% \usepackage{chngpage}
+\usepackage{fancyhdr}
+\usepackage[margin=.7in]{geometry}
+\usepackage{graphicx}
+\usepackage{hyperref}
+% \usepackage{lscape}
+\usepackage{mathpazo}
+\usepackage{stmaryrd}
+% \usepackage{subfigure}
+\usepackage{url}
+
+% packages from nam's template
+\usepackage{authblk}
+\usepackage{amsfonts}
+% \usepackage{biblatex}
+\usepackage{float}
+\usepackage[utf8]{inputenc}
+\usepackage{siunitx}
+\usepackage{subcaption}
+\usepackage[nottoc,numbib]{tocbibind}
+
+% other packages
+\usepackage{parskip}
+
+\pagestyle{fancy}
+
+\newcommand{\email}[1]{\texttt{\href{mailto:#1}{#1}}}
+
+\lhead{\textbf{Project Proposal}}
+\rhead{\textbf{COMP.4420/5420, UMASS Lowell}}
+
+\def\proptitle{COMP4420 Project Report: Sarcasm Detection in Headlines}
+\def\propauthors{Bui, Nam (\#01963609), 
+                 Conners, Riley (\#01943861), 
+                 Zuk, Sam (\#01642608)}
+
+\begin{document}
+
+\begin{center}
+    \textbf{\Large{\proptitle}} \\
+    \textbf{\underline{\propauthors}}
+\end{center}
+
+\bigskip
+
+\section{Abstract}
+% Write a concise summary of the project and the conclusions of the 
+% work. It should be no longer than one short paragraph (e.g. 200 
+% words).
+
+\section{Introduction}
+%Provide an overview of the problem, its significance, potential 
+% beneficiaries of its resolution, the challenges associated with 
+% its resolution, and a summary of your solution and its results.
+
+\section{Method}
+% Provide a detailed description of your method and explain why the 
+% method is a good fit for the problem.
+
+\section{Data}
+% Describe the data used for experiments and report data statistics 
+% as well as interesting observations or patterns in the data.
+
+\section{Results}
+% - Briefly describe the evaluation approach and metrics.
+
+% - Report performance metrics for the method(s) through Figures or 
+% Tables.
+
+% - Report insights obtained from the results. Good ways to obtain 
+% insight are ablation analysis, error analysis, and use of 
+% synthetic data.
+
+\section{Conclusion}
+% In one short paragraph concisely summarize the main points and 
+% insights of the project, describe potential directions to extend 
+% your project, and [G] describe limitations of your project.
+
+\section{Contribution Chart:}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{c|c|c}
+        Student Name \& ID  & Tasks/Subtasks &  Commentary on Contribution \\
+        Bui, Nam (\#01963609) & Task 1& \\
+        & Task 2 & \\
+        &&\\
+        Conners, Riley (\#01943861) & Task 1& \\
+        & Task 2 & \\
+        &&\\
+        Zuk, Sam (\#01642608)& Task 1& \\
+        & Task 2 & \\
+    \end{tabular}
+    \label{tab:my_label}
+\end{table}
+
+\bibliographystyle{plain}
+\bibliography{ref}
+
+\end{document}
