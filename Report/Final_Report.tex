@@ -60,13 +60,106 @@
 % beneficiaries of its resolution, the challenges associated with 
 % its resolution, and a summary of your solution and its results.
 
+Sarcasm is a feature of natural language that is notoriously difficult to
+define and identify in both the spoken and written word. The assumption that a
+statement will be recognized as sarcastic is typically contingent upon the
+listener/reader knowing some outside piece of contextual information
+beforehand. However, this external information isn't always known, and even
+when it is, the relationship between it and the statement at hand may not
+always be clear. When this happens, the meaning can be obscured as a result,
+often leading to avoidable scenarios involving miscommunication.
+
+Recognizing sarcasm typically involves picking up on subtle cues and nuance
+that can be difficult to identify. This can often pose a challenge for
+populations who encounter greater difficulty when processing certain aspects of
+a language. For example, someone trying to interpret a language they don't
+speak natively will likely have to expend more mental effort to parse out
+meaning from words, which in turn makes it more difficult to pick up on nuance,
+including sarcasm. Being unfamiliar with the cultural norms, idioms, etc. that
+inform the established meaning of the locally spoken language can also be a
+source of confusion. In addition, many neurodivergent people, in particular
+those with autism, can struggle to recognize and/or communicate certain social
+cues in conversation due to differences between their cognitive experience of
+language and what is expected of them.
+
+Finally, there are unique challenges faced in detecting sarcasm in the written
+word. It is often possible in practice to infer a statement is sarcastic, even
+without necessarily having the context to understand \textit{why} by listening
+to changes in the tone of the speaker. However, when translated into the
+written word, some or all of this information is lost, making sarcasm even more
+difficult to detect when only text is given. With the Internet now being
+extremely important to modern infrastructure, and with text being the
+predominant medium for online communication, this problem has become
+increasingly apparent over the years. This project shall explore and contrast
+different approaches to disambiguating sarcasm by applying concepts from the
+fields of computational linguistics and machine learning.
+
 \section{Method}
 % Provide a detailed description of your method and explain why the 
 % method is a good fit for the problem.
 
+% Baseline: Naive Bayes w/ one-hot encoding
+For the baseline model, used Naive-Bayes with one-hot encoding.
+
+% Fine-tune word2vec for dataset
+After training and evaluating the baseline model,  fine-tuned
+word2vec to the headline-specific words.
+
+% DAN + RNN w/ LSTM
+Once the word embeddings were fine tuned, we trained and
+evaluate either a LSTM model and compared results.
+
 \section{Data}
 % Describe the data used for experiments and report data statistics 
 % as well as interesting observations or patterns in the data.
+
+% When and how dataset was collected
+% Headlines collected from The Onion (sarcastic) and HuffPost (sincere)
+The dataset we used for this project is a collection of 28,619 tagged
+newspaper headlines-- of which 13,635 are from the satirical publication
+\textit{TheOnion}, the other 14,984 being from the non-satirical publication
+\textit{The Huffington Post} (\textit{HuffPost}). The data was collected from
+TheOnion's ``News in Brief'' and ``News in Photos'' sections and HuffPost's
+news archive page in 2019
+\cite{misra2023Sarcasm}.
+
+% Structure of data in dataset
+For each headline, the dataset contains a JSON object with three attributes:
+\begin{itemize}
+    \item \texttt{is\_sarcastic} (integer): the headline's label-- 1 if
+        sarcastic, 0 if not.
+    \item \texttt{headline} (string): the text of the headline, case-converted
+        to be all lowercase.
+    \item \texttt{article\_link} (string): the URL of the referenced article.
+\end{itemize}
+
+This project used the contents of \texttt{headline} to predict
+the value of \texttt{is\_sarcastic}. Values of \texttt{article\_link} were not 
+used directly for the purposes of modeling sarcasm, but for other experiments
+they are useful when attempting to decipher why certain models made certain
+predictions.
+
+% Headlines from sources do not intersect (self-contained)
+This dataset has advantages over text that could be found on social media
+platforms because news text is formal in nature. This means there are less
+words outside of the word2vec vocabulary, less spelling mistakes, and little to
+no slang usage. Also, because The Onion is openly sarcastic by design, there is
+no ambiguity regarding if labels are correct.
+
+% Limitation of dataset: Only two news sources
+% Additionally, sarcastic headlines from The Onion are obviously sarcastic,
+% so more subtle sarcasm is not captured in the dataset
+However, there are downsides to news headline data. In this case, there are
+only two news sources being used, and the model could pick up on writing styles
+or other details instead of sarcasm. There is another potential issue that
+stems from The Onion's obvious use of sarcasm. In more nuanced cases where
+sarcasm is more subtle, a model could do poorly.
+
+% Talk about the manual review of test/validation/training data and manual review.
+The data was split 70/20/10 into training, validation, and testing sets, each with equal 
+proportion of genuine and sarcastic articles. All articles labeled as genuine in the test 
+dataset were manually reviewed to ensure there were no incorrect labels.
+
 
 \section{Results}
 % - Briefly describe the evaluation approach and metrics.
