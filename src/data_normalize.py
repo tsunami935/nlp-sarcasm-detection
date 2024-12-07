@@ -28,7 +28,7 @@ def tokenize_hyphen(tokens: list[str]) -> list[str]:
     return tokens
 
 
-def normalize_sentence(sentence: str) -> str:
+def normalize_sentence(sentence: str) -> list[str]:
     # Turn all lowercase
     # Turn contractions to canonical form
     # Tokenize sentences
