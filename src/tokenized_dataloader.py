@@ -1,53 +1,47 @@
-import json
+from __future__ import annotations
+from numpy.typing import NDArray
+
+from collections import defaultdict
+
+import pandas as pd
+
 import torch
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import Dataset
 from torch.nn.utils.rnn import pad_sequence
 
-import nltk
-from nltk.tokenize import word_tokenize
+from common import *
+
 
 class SarcasmDataset(Dataset):
-    def __init__(self, json_file):
-        # Load data from the JSON file
-        self.data = []
-        with open(json_file, 'r') as f:
-            for line in f:
-                self.data.append(json.loads(line.strip()))
+    def __init__(
+        self, tokens: list[NDArray], labels: list[int], w2i: defaultdict[str, int]
+    ):
+        super().__init__()
+        tokens = [torch.LongTensor(tk) for tk in tokens]
+        self.tokens = pad_sequence(tokens, batch_first=True, padding_value=w2i[TK_END])
+        self.lengths = torch.LongTensor([len(tk) for tk in tokens])
+        self.labels = torch.LongTensor(labels)
 
-        # Get max token length for padding
-        max_length = 0
-        for item in self.data:
-            tokens = item['tokens']
-            if len(tokens) >= max_length: max_length = len(tokens)
-        self.max_length = max_length
+    @classmethod
+    def load_json(cls, fn: str, w2i: defaultdict[str, int]) -> SarcasmDataset:
+        df = pd.read_json(fn, lines=True)
+        df["tokens"] = df.apply(lambda s: vectorize_tokens(s, w2i))
+        return cls(df["tokens"], df["is_sarcastic"], w2i)
 
     def __len__(self):
         return len(self.data)
 
     def __getitem__(self, idx):
-        # Get the individual sample
-        item = self.data[idx]
-        label = torch.tensor(item['is_sarcastic'])
-        tokens = item['tokens']
-        
-        # crop for max length (shouldnt be needed but just in case)
-        tokens = tokens[:self.max_length]
-        
-        # Pad the tokens to the max length if needed
-        padding_length = self.max_length - len(tokens)
-        tokens.extend(['<pad>'] * padding_length)  # Padding with '<pad>'
+        return self.tokens[idx], self.lengths[idx], self.labels[idx]
 
-        # Return the input_ids, attention_mask, and label as a tuple
-        return tokens, label
 
 # Example usage
-dataset = SarcasmDataset(json_file="test_tokenized.json")
+# dataset = SarcasmDataset(json_file="test_tokenized.json")
 
-dataloader = DataLoader(dataset, batch_size=32, shuffle=True)
+# dataloader = DataLoader(dataset, batch_size=32, shuffle=True)
 
 # Iterate through the DataLoader DEBUG
-#for batch in dataloader:
+# for batch in dataloader:
 #   print(batch)
 #  break
-#print(dataset.max_length)
-
+# print(dataset.max_length)
