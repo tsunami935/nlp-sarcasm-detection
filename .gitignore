@@ -9,4 +9,12 @@
 *.out
 *.xml
 *.gz
+
+# python stuff
+__pycache__/
+.ipynb_checkpoints/
 *.pyc
+.venv
+
+# Misc. embedding files
+*.bin
