@@ -54,7 +54,7 @@ def tokenize_single_quote(tokens: list[str]) -> list[str]:
 
 
 def tokenize_hyphen(tokens: list[str]) -> list[str]:
-    hyphen = " " + TK_HYPH + " "
+    hyphen = " - "
     size = len(tokens)
     i = 0
     while i < size:
@@ -69,13 +69,14 @@ def tokenize_hyphen(tokens: list[str]) -> list[str]:
 
 
 def tokenize_edge_cases(tokens: list[str]) -> Iterable[str]:
+    u_map = {"you.s": "u.s", "you.n": "u.n", "you.k": "u.k", "you.s.a": "u.s.a"}
     iter_tokens = enumerate(tokens)
     n_tokens = len(tokens)
 
     for idx, token in iter_tokens:
         # undo mangling by contractions library
-        if token == "you.s":
-            token = "u.s"
+        if sub := u_map.get(token, None):
+            token = sub
             if idx < (n_tokens - 1) and tokens[idx + 1] == ".":
                 _ = next(iter_tokens)  # advance the iterator to skip the "."
                 token += "."
@@ -83,8 +84,10 @@ def tokenize_edge_cases(tokens: list[str]) -> Iterable[str]:
         elif token == "'n" and idx < (n_tokens - 1) and tokens[idx + 1] == "'":
             _ = next(iter_tokens)  # advance the iterator to skip the "'"
             token += "'"
+        # "you.s." -> "u.s."
+        elif token == "you.s.":
+            token = "u.s."
         yield token
-
 
 
 SQ_WORDS = ("'round", "'til", "'tis", "'n", "'n'")
@@ -136,9 +139,11 @@ def normalize_sentence(sentence: str) -> list[str]:
     # Turn contractions to canonical form
     # sentences
 
-    tks = tokenize_single_quote(sentence.lower().split(" "))
-    tks = tokenize_hyphen(word_tokenize(contractions.fix(" ".join(tks))))
-    tks = tokenize_edge_cases(tks)
+    tks = sentence.lower().split(" ")
+    tks = tokenize_hyphen(tks)
+    tks = tokenize_single_quote(tks)
+    tks = word_tokenize(contractions.fix(" ".join(tks)))
+    tks = list(tokenize_edge_cases(tks))
 
     # Add start and end tokens
     return [TK_START, *tks, TK_END]
