@@ -67,6 +67,9 @@ class LSTMBinaryClassifier(nn.Module):
         # LSTM layer
         self.rnn = nn.LSTM(embed_size, hidden_size[0])
 
+        # Attention
+        # self.attention = nn.Linear(hidden_size[0], 1)
+
     def forward(self, x: Tensor, lengths: Tensor = None, h: Tensor = None):
         # Get embeddings
         x = self.embedding(x)
@@ -124,12 +127,15 @@ if __name__ == "__main__":
     from torch.nn.utils import clip_grad_norm_
     from gensim.models.keyedvectors import KeyedVectors
 
+    from sklearn.metrics import confusion_matrix
+
     from tokenized_dataloader import SarcasmDataset
 
     # Load configuration and hyperparameters
     parser = ArgumentParser()
     parser.add_argument("cfg", type=str, help="JSON file with configuration parameters")
     parser.add_argument("-d", "--device", type=str, help="CUDA device")
+    parser.add_argument("-t", "--test", action='store_true', help="Model to test.")
     args = parser.parse_args()
     with open(args.cfg, "r") as fin:
         cfg: dict[str, Any] = json.load(fin)
@@ -151,8 +157,8 @@ if __name__ == "__main__":
         LEARNING_RATE: float = cfg.get("LEARNING_RATE", 0.005)
         LR_GAMMA: float = cfg.get("LR_GAMMA", 1.0)
         CHKPT_INTERVAL: int = cfg.get("CHKPT_INTERVAL", 25)
+        MODEL_NAME: str = cfg.get("MODEL_NAME", None)
 
-    print("Loading data")
     # Load standard vocabulary mapping or from word2vec
     if EMBED_FN is None:
         with open(DATA_DIR + W2I_FN, "r") as fin:
@@ -161,106 +167,117 @@ if __name__ == "__main__":
         word2vec: KeyedVectors = KeyedVectors.load(EMBED_FN)
         w2i = word2vec.key_to_index
 
-    # Load Train and Validation Data
-    train_set = SarcasmDataset.load_json(DATA_DIR + TRAIN_FN, w2i)
-    val_set = SarcasmDataset.load_json(DATA_DIR + VAL_FN, w2i)
-    train_loader = DataLoader(train_set, batch_size=BATCH_SIZE, shuffle=True)
-    val_loader = DataLoader(val_set, batch_size=BATCH_SIZE, shuffle=True)
-
     # CUDA device
     if args.device is None:
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     else:
         device = torch.device(args.device)
 
-    # Load embeddings & initialize model
-    if EMBED_FN is None:
-        model = LSTMBinaryClassifier(len(w2i), EMBED_SIZE, HIDDEN_SIZE).to(device)
-    else:
-        model = LSTMBinaryClassifier(
-            len(w2i), EMBED_SIZE, HIDDEN_SIZE, word2vec, freeze_embed=True
-        )
+    if args.test == False:
+        print("Loading data")
 
-    # Learning objective
-    criterion = nn.CrossEntropyLoss(reduction="sum")
-    optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
-    scheduler = optim.lr_scheduler.ExponentialLR(optimizer, gamma=LR_GAMMA)
+        # Load Train and Validation Data
+        train_set = SarcasmDataset.load_json(DATA_DIR + TRAIN_FN, w2i)
+        val_set = SarcasmDataset.load_json(DATA_DIR + VAL_FN, w2i)
+        train_loader = DataLoader(train_set, batch_size=BATCH_SIZE, shuffle=True)
+        val_loader = DataLoader(val_set, batch_size=BATCH_SIZE, shuffle=True)
 
-    # Train model
-    start = time.time()
-    min_loss = np.inf
-    for epoch in range(NUM_EPOCHS):
-        print(f"epoch {epoch}:")
-
-        # Train over training set
-        running_loss = 0
-        correct = 0
-        for sid, (sent, lengths, labels) in enumerate(train_loader):
-            # Calculate model error and  propogate loss
-            loss, corr = calc_loss(
-                model, sent, lengths, labels, criterion, device=device
+        # Load embeddings & initialize model
+        if EMBED_FN is None:
+            model = LSTMBinaryClassifier(len(w2i), EMBED_SIZE, HIDDEN_SIZE).to(device)
+        else:
+            model = LSTMBinaryClassifier(
+                len(w2i), EMBED_SIZE, HIDDEN_SIZE, word2vec, freeze_embed=True
             )
-            running_loss += loss.item()
-            correct += corr.item()
-            loss.backward()
 
-            # Regularization: gradient clipping and noisy gradients
-            clip_grad_norm_(model.parameters(), GRAD_CLIP_VALUE * BATCH_SIZE)
-            for layer in model.parameters():
-                layer.grad += torch.randn_like(layer.grad) * NOISE_SD
-            optimizer.step()
+        # Learning objective
+        criterion = nn.CrossEntropyLoss(reduction="sum")
+        optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
+        scheduler = optim.lr_scheduler.ExponentialLR(optimizer, gamma=LR_GAMMA)
 
-        # Evaluate over validation set
-        val_loss = 0
-        val_correct = 0
-        with torch.no_grad():
-            for sid, (sent, lengths, labels) in enumerate(val_loader):
+        # Train model
+        start = time.time()
+        min_loss = np.inf
+        for epoch in range(NUM_EPOCHS):
+            print(f"epoch {epoch}:")
+
+            # Train over training set
+            running_loss = 0
+            correct = 0
+            for sid, (sent, lengths, labels) in enumerate(train_loader):
+                # Calculate model error and  propogate loss
                 loss, corr = calc_loss(
                     model, sent, lengths, labels, criterion, device=device
                 )
-                val_loss += loss.item()
-                val_correct += corr.item()
+                running_loss += loss.item()
+                correct += corr.item()
+                loss.backward()
 
-        # Print loss and accuracy
-        train_loss = running_loss / len(train_set)
-        val_loss = val_loss / len(val_set)
-        print(f" train_loss={train_loss:.4f}, val_loss={val_loss:.4f}")
-        print(
-            f" train_acc={correct / len(train_set):.4f}, val_acc={val_correct/len(val_set):.4f}"
-        )
+                # Regularization: gradient clipping and noisy gradients
+                clip_grad_norm_(model.parameters(), GRAD_CLIP_VALUE * BATCH_SIZE)
+                for layer in model.parameters():
+                    layer.grad += torch.randn_like(layer.grad) * NOISE_SD
+                optimizer.step()
 
-        # Early stoppage:
-        if val_loss < min_loss:
-            min_loss = val_loss
-        elif epoch > MIN_EPOCHS and val_loss > min_loss + EARLY_STOP_THRESHOLD:
-            torch.save(model.state_dict(), f"{OUT_DIR}SD_LSTM_ep{epoch}.pt")
-            print(f"Early stopping at epoch {epoch}.")
-            break
+            # Evaluate over validation set
+            val_loss = 0
+            val_correct = 0
+            with torch.no_grad():
+                for sid, (sent, lengths, labels) in enumerate(val_loader):
+                    loss, corr = calc_loss(
+                        model, sent, lengths, labels, criterion, device=device
+                    )
+                    val_loss += loss.item()
+                    val_correct += corr.item()
 
-        # Save checkpoint
-        if epoch % CHKPT_INTERVAL == 0 and epoch > 0:
-            torch.save(model.state_dict(), f"{OUT_DIR}SD_LSTM_ep{epoch}.pt")
+            # Print loss and accuracy
+            train_loss = running_loss / len(train_set)
+            val_loss = val_loss / len(val_set)
+            print(f" train_loss={train_loss:.4f}, val_loss={val_loss:.4f}")
+            print(
+                f" train_acc={correct / len(train_set):.4f}, val_acc={val_correct/len(val_set):.4f}"
+            )
 
-        # Update LR
-        scheduler.step()
-    end = time.time()
-    print(f"Training time: {datetime.timedelta(seconds=end-start)}")
+            # Early stoppage:
+            if val_loss < min_loss:
+                min_loss = val_loss
+            elif epoch > MIN_EPOCHS and val_loss > min_loss + EARLY_STOP_THRESHOLD:
+                torch.save(model.state_dict(), f"{OUT_DIR}SD_LSTM_ep{epoch}.pt")
+                print(f"Early stopping at epoch {epoch}.")
+                break
 
-    # Save final model
-    torch.save(model.state_dict(), f"{OUT_DIR}SD_LSTM_final.pt")
+            # Save checkpoint
+            if epoch % CHKPT_INTERVAL == 0 and epoch > 0:
+                torch.save(model.state_dict(), f"{OUT_DIR}SD_LSTM_ep{epoch}.pt")
+
+            # Update LR
+            scheduler.step()
+        end = time.time()
+        print(f"Training time: {datetime.timedelta(seconds=end-start)}")
+
+        # Save final model
+        torch.save(model.state_dict(), f"{OUT_DIR}SD_LSTM_final.pt")
 
     # Test model
+    if args.test:
+        state_dict = torch.load(f"{OUT_DIR}SD_LSTM_final.pt")
+        model = LSTMBinaryClassifier(len(w2i), EMBED_SIZE, HIDDEN_SIZE)
+        model.load_state_dict(state_dict)
+        model = model.to(device)
     test_set = SarcasmDataset.load_json(DATA_DIR + TEST_FN, w2i)
     test_loader = DataLoader(test_set, batch_size=BATCH_SIZE)
-    test_loss = test_correct = 0
+    pred = []
+    y = []
     with torch.no_grad():
         for sid, (sent, lengths, labels) in enumerate(test_loader):
-            loss, corr = calc_loss(
-                model, sent, lengths, labels, criterion, device=device
-            )
-            test_loss += loss.item()
-            test_correct += corr
+            sent = sent.to(device=device)
+            labels = labels.to(device=device)
+            outputs, _ = model(sent, lengths)
+            pred.append(torch.argmax(outputs, dim=1).cpu().numpy())
+            y.append(labels.cpu().numpy())
     print(f"{len(test_set)} samples tested.")
-    print(
-        f"test_loss={test_loss/len(test_set):.4f}, test_acc={test_correct/len(test_set):.4f}"
-    )
+    pred = np.concatenate(pred)
+    y = np.concatenate(y)
+
+    cm = confusion_matrix(y, pred)
+    evaluate_confusion_matrix(cm)
