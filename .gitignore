@@ -19,3 +19,4 @@ __pycache__/
 
 # Misc. embedding files
 *.bin
+/src/.vscode
