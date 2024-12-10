@@ -177,8 +177,9 @@ if __name__ == "__main__":
     if EMBED_FN is None:
         model = LSTMBinaryClassifier(len(w2i), EMBED_SIZE, HIDDEN_SIZE).to(device)
     else:
-        word2vec: KeyedVectors = KeyedVectors.load(EMBED_FN)
-        w21 = word2vec.key_to_index
+        model = LSTMBinaryClassifier(
+            len(w2i), EMBED_SIZE, HIDDEN_SIZE, word2vec, freeze_embed=True
+        )
 
     # Learning objective
     criterion = nn.CrossEntropyLoss(reduction="sum")
