@@ -85,6 +85,7 @@ class LSTMBinaryClassifier(nn.Module):
         # Pass through RNN layer
         x, h = self.rnn(x, h)
         x, _ = pad_packed_sequence(x, batch_first=True)
+        x = x[:, -1, :]
 
         # Pass through fully connected layers
         for fc in self.fc[:-1]:
