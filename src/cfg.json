@@ -1,0 +1,22 @@
+{
+    "DATA_DIR": "../data/",
+    "TRAIN_FN": "train_tokenized.json",
+    "VAL_FN": "val_tokenized.json",
+    "TEST_FN": "test_tokenized.json",
+    "W2I_FN": "word2ind.json",
+    "OUT_DIR": "../chkpt/cfg0/",
+    "EMBED_SIZE": 100,
+    "HIDDEN_SIZE": [
+        64,
+        10
+    ],
+    "GRAD_CLIP_VALUE": 5.0,
+    "BATCH_SIZE": 64,
+    "NUM_EPOCHS": 250,
+    "MIN_EPOCHS": 50,
+    "EARLY_STOP_THRESHOLD": 0.02,
+    "NOISE_SD": 1e-10,
+    "LEARNING_RATE": 0.01,
+    "LR_GAMMA": 0.99,
+    "CHKPT_INTERVAL": 50
+}

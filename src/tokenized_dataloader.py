@@ -1,14 +1,10 @@
 from __future__ import annotations
 from numpy.typing import NDArray
-
 from collections import defaultdict
-
 import pandas as pd
-
 import torch
 from torch.utils.data import Dataset
 from torch.nn.utils.rnn import pad_sequence
-
 from common import *
 
 
@@ -25,23 +21,11 @@ class SarcasmDataset(Dataset):
     @classmethod
     def load_json(cls, fn: str, w2i: defaultdict[str, int]) -> SarcasmDataset:
         df = pd.read_json(fn, lines=True)
-        df["tokens"] = df.apply(lambda s: vectorize_tokens(s, w2i))
+        df["tokens"] = df["tokens"].apply(lambda s: vectorize_tokens(s, w2i))
         return cls(df["tokens"], df["is_sarcastic"], w2i)
 
     def __len__(self):
-        return len(self.data)
+        return len(self.tokens)
 
     def __getitem__(self, idx):
         return self.tokens[idx], self.lengths[idx], self.labels[idx]
-
-
-# Example usage
-# dataset = SarcasmDataset(json_file="test_tokenized.json")
-
-# dataloader = DataLoader(dataset, batch_size=32, shuffle=True)
-
-# Iterate through the DataLoader DEBUG
-# for batch in dataloader:
-#   print(batch)
-#  break
-# print(dataset.max_length)
