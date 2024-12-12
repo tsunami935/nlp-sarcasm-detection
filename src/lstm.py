@@ -163,7 +163,7 @@ if __name__ == "__main__":
 
     # Make output directory if it does not exist
     if not os.path.exists(OUT_DIR):
-        os.mkdir(OUT_DIR)
+        os.makedirs(OUT_DIR, exist_ok=True)
 
     # CUDA device
     if args.device is None:
