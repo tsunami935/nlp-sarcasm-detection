@@ -46,10 +46,11 @@ class LSTMBinaryClassifier(nn.Module):
             n, d = embed_weights.size()
             # Load pretrained embeddings
             if n == nwords and d == embed_size:
-                self.embedding.load_state_dict({"weight": embed_weights})
+                self.embedding = nn.Embedding.from_pretrained(embed_weights, freeze=freeze_embed)
+                # self.embedding.load_state_dict({"weight": embed_weights})
                 # Freeze embeddings
                 if freeze_embed:
-                    self.embedding.weight.requires_grad = False
+                    # self.embedding.weight.requires_grad = False
                     self.embedding_droupout.p = 0.0
             else:
                 print(
@@ -120,6 +121,7 @@ if __name__ == "__main__":
     import time
     import datetime
     from argparse import ArgumentParser
+    import os
 
     import pandas as pd
     from torch.utils.data import DataLoader
@@ -135,7 +137,7 @@ if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("cfg", type=str, help="JSON file with configuration parameters")
     parser.add_argument("-d", "--device", type=str, help="CUDA device")
-    parser.add_argument("-t", "--test", action='store_true', help="Model to test.")
+    parser.add_argument("-t", "--test", action="store_true", help="Model to test.")
     args = parser.parse_args()
     with open(args.cfg, "r") as fin:
         cfg: dict[str, Any] = json.load(fin)
@@ -159,19 +161,25 @@ if __name__ == "__main__":
         CHKPT_INTERVAL: int = cfg.get("CHKPT_INTERVAL", 25)
         MODEL_NAME: str = cfg.get("MODEL_NAME", None)
 
-    # Load standard vocabulary mapping or from word2vec
-    if EMBED_FN is None:
-        with open(DATA_DIR + W2I_FN, "r") as fin:
-            w2i: dict[str, int] = json.load(fin)
-    else:
-        word2vec: KeyedVectors = KeyedVectors.load(EMBED_FN)
-        w2i = word2vec.key_to_index
+    # Make output directory if it does not exist
+    if not os.path.exists(OUT_DIR):
+        os.mkdir(OUT_DIR)
 
     # CUDA device
     if args.device is None:
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     else:
         device = torch.device(args.device)
+
+    # Load standard vocabulary mapping or from word2vec
+    if EMBED_FN is None:
+        with open(DATA_DIR + W2I_FN, "r") as fin:
+            w2i: dict[str, int] = json.load(fin)
+    else:
+        word2vec: KeyedVectors = KeyedVectors.load(EMBED_FN)
+        word2vec.add_vector(TK_UNK, np.zeros(EMBED_SIZE))
+        w2i = word2vec.key_to_index
+        word2vec = torch.FloatTensor(word2vec.vectors)
 
     if args.test == False:
         print("Loading data")
@@ -188,7 +196,7 @@ if __name__ == "__main__":
         else:
             model = LSTMBinaryClassifier(
                 len(w2i), EMBED_SIZE, HIDDEN_SIZE, word2vec, freeze_embed=True
-            )
+            ).to(device)
 
         # Learning objective
         criterion = nn.CrossEntropyLoss(reduction="sum")
@@ -216,7 +224,8 @@ if __name__ == "__main__":
                 # Regularization: gradient clipping and noisy gradients
                 clip_grad_norm_(model.parameters(), GRAD_CLIP_VALUE * BATCH_SIZE)
                 for layer in model.parameters():
-                    layer.grad += torch.randn_like(layer.grad) * NOISE_SD
+                    if layer.requires_grad:
+                        layer.grad += torch.randn_like(layer.grad) * NOISE_SD
                 optimizer.step()
 
             # Evaluate over validation set
