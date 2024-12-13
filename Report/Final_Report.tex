@@ -121,15 +121,11 @@ A Naive Bayes model was used to get initial performance baselines.
 % In addition to tokenized text, used lemmazation
 % Variable smoothing k in [1.0,3.0]
 
-The next step involved fine tuning the word embeddings in the
-Word2Vec structure to better fit the dataset and adding embeddings
-for words that were common and unique to the dataset.
-These different word embeddings were then given to a
-LSTM model to see how different embeddings improved performance,
-as well as test the performance of the LSTM compared with the baseline.
-
-Once the word embeddings were made and both the models were tested,
-we compiled our results into the results you see below.
+Word2vec embeddings pre-trained on the Google News dataset
+were then fine-tuned over the sarcasm dataset to better fit the dataset. \cite{google-word2vec}
+Embeddings for words that were common and unique to the dataset were also added.
+An LSTM model was then trained with and without the pre-trained embeddings.
+Results can be found in section \ref{sec:res}.
 
 \section{Data}\label{sec:data}
 % Describe the data used for experiments and report data statistics 
@@ -183,7 +179,7 @@ proportion of genuine and sarcastic articles. All articles labeled as genuine in
 dataset were manually reviewed to ensure there were no incorrect labels.
 
 
-\section{Results}
+\section{Results}\label{sec:res}
 % - Briefly describe the evaluation approach and metrics.
 
 % - Report performance metrics for the method(s) through Figures or 
