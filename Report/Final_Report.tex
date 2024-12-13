@@ -114,18 +114,38 @@ First we took the dataset described in section \ref{sec:data}
 and partitioned it into train, validation, and test sets with a 70/20/10 split respectively.
 The test set labels were then manually verified.
 
-% Tokenization
+The steps for tokenizing the dataset were:
+\begin{enumerate}
+    \item Tokenize hyphens.
+    \item Tokenize single quotes.
+    \item Transform contractions to canonical form.
+    \item NLTK word tokenize.
+    \item Address edge cases.
+\end{enumerate}
+The vocabulary included all tokens with $ count > 5 $.
 
 % Naive Bayes
 A Naive Bayes model was used to get initial performance baselines.
-% In addition to tokenized text, used lemmazation
-% Variable smoothing k in [1.0,3.0]
+Along with the tokenized dataset,
+lemmatization was used to group words with the same meaning,
+like 'says' and 'said', together.
+Hyperparameter search was done on the smoothing parameter of the model.
+We found that smoothing factor $ \alpha = 1.5 $ performed the best, 
+although other parameters performed closely.
 
 Word2vec embeddings pre-trained on the Google News dataset
 were then fine-tuned over the sarcasm dataset to better fit the dataset. \cite{google-word2vec}
 Embeddings for words that were common and unique to the dataset were also added.
+Since word2vec does not have an unknown token,
+we mapped the unknown token to the 0 vector,
+which is what Rishabh and Prahal did in their research. \cite{misra2023Sarcasm}
 An LSTM model was then trained with and without the pre-trained embeddings.
+The architecture of the LSTM model consisted of
+embedding layer, LSTM layer, and a fully-connected feedforward network.
+Gradient clipping, early stoppage, batching, dropout,
+and learning rate scheduling were used during training. 
 Results can be found in section \ref{sec:res}.
+
 
 \section{Data}\label{sec:data}
 % Describe the data used for experiments and report data statistics 
@@ -186,7 +206,7 @@ dataset were manually reviewed to ensure there were no incorrect labels.
 
 % - Briefly describe the evaluation approach and metrics.
 To compare our results with the results of Rishabh and Prahal,
-we measured the accuracy of our models on the test set.
+we measured the accuracy of our models on the test set. \cite{misra2023Sarcasm}
 Additionally, since this is a binary classification task,
 we also used precision, recall, and F1 metrics.
 
