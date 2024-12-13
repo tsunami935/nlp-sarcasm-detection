@@ -33,7 +33,7 @@
 
 \newcommand{\email}[1]{\texttt{\href{mailto:#1}{#1}}}
 
-\lhead{\textbf{Project Report}}
+\lhead{\textbf{Project Proposal}}
 \rhead{\textbf{COMP.4420/5420, UMASS Lowell}}
 
 \def\proptitle{COMP4420 Project Report: Sarcasm Detection in Headlines}
@@ -54,6 +54,10 @@
 % Write a concise summary of the project and the conclusions of the 
 % work. It should be no longer than one short paragraph (e.g. 200 
 % words).
+
+The project below set out to test different approaches to the task of sarcasm detection in news headlines. This task was handled by a naive bayes model as well as an LSTM model, and both used normal and customized word embeddings. Normal embeddings were based of word2vec and customized embeddings included proper nouns and other new words to better fit the dataset. After testing both models against the dataset, Bayes achieved roughly 80\% accuracy in detecting sarcasm and LSTMs achieved roughly 90\%. Different embeddings had a negligible effect on classification, but the switch from bayes to a LSTM approach showed significant improvement. 
+
+
 
 \section{Introduction}
 %Provide an overview of the problem, its significance, potential 
@@ -95,19 +99,12 @@ different approaches to disambiguating sarcasm by applying concepts from the
 fields of computational linguistics and machine learning.
 
 \section{Method}
-% Provide a detailed description of your method and explain why the 
-% method is a good fit for the problem.
 
-% Baseline: Naive Bayes w/ one-hot encoding
-For the baseline model, used Naive-Bayes with one-hot encoding.
+First we took the dataset described below and split it into a 70/20/10 Training Validation and Testing sets. The test set was then manually combed through for correctness. With a valid dataset, a bayes model was made to get initial accuracy baselines on the data. 
 
-% Fine-tune word2vec for dataset
-After training and evaluating the baseline model,  fine-tuned
-word2vec to the headline-specific words.
+The next step involved fine tuning the word embeddings in the Word2Vec structure to better fit the dataset of news headlines by including proper nouns and context for event names. These different word embeddings were then given to a LSTM model to see how different embeddings improved performance, as well as test the performance of the LSTM compared with the baseline.
 
-% DAN + RNN w/ LSTM
-Once the word embeddings were fine tuned, we trained and
-evaluate either a LSTM model and compared results.
+Once the word embeddings were made and both the models were tested, we compiled our results into the results you see below.
 
 \section{Data}
 % Describe the data used for experiments and report data statistics 
@@ -167,6 +164,7 @@ dataset were manually reviewed to ensure there were no incorrect labels.
 % - Report performance metrics for the method(s) through Figures or 
 % Tables.
 
+
 % - Report insights obtained from the results. Good ways to obtain 
 % insight are ablation analysis, error analysis, and use of 
 % synthetic data.
@@ -176,20 +174,30 @@ dataset were manually reviewed to ensure there were no incorrect labels.
 % insights of the project, describe potential directions to extend 
 % your project, and [G] describe limitations of your project.
 
+In conclusion, we found that a neural network approach like the LSTM model was more powerful than a simpler concept like Naive Bayes. Sarcasm is a complex concept to identify, especially with only text input. Having a model that can hit near 90\% accuracy is a good improvement on previous results and shows the power of an LSTM over Bayes. 
+
+This project could be extended in the future to work on further customized dictionaries with word embeddings for new words like Trump. Customized embeddings for names and/or events could lead to even better recognition of the meaning behind headlines. In terms of the model, an attention or dropout layer could also be added to see how it affects performance. 
+
 \section{Contribution Chart:}
 
-\begin{table}[h]
+\begin{table}[H]
     \centering
     \begin{tabular}{c|c|c}
         Student Name \& ID  & Tasks/Subtasks &  Commentary on Contribution \\
-        Bui, Nam (\#01963609) & Task 1& \\
-        & Task 2 & \\
+        \hline
+        Bui, Nam (\#01963609) & Created and Ran Bayes Model& \\
+        & Created LSTM Model & \\
+        & Debugged Models & \\
         &&\\
-        Conners, Riley (\#01943861) & Task 1& \\
-        & Task 2 & \\
+        \hline
+        Conners, Riley (\#01943861) & Split Data and Validated Tests& \\
+        & Created Data Loader & \\
+        & Ran Initial Runs of LSTM & \\
         &&\\
-        Zuk, Sam (\#01642608)& Task 1& \\
-        & Task 2 & \\
+        \hline
+        Zuk, Sam (\#01642608)& Tokenized Dictionary & \\
+        & Created Custom Word Embeddings & \\
+        & Ran Final Run of LSTM Model& \\
     \end{tabular}
     \label{tab:my_label}
 \end{table}
