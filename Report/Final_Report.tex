@@ -204,7 +204,7 @@ we mapped the unknown token to the 0 vector,
 which is what Rishabh and Prahal did in their research. \cite{misra2023Sarcasm}
 An LSTM model was then trained with and without the pre-trained embeddings.
 The architecture of the LSTM model consisted of
-embedding layer, LSTM layer, and a fully-connected feedforward network.
+embedding layer, LSTM layer, and a fully connected feed-forward network.
 Gradient clipping, early stoppage, batching, dropout,
 and learning rate scheduling were used during training.
 Results can be found in section \ref{sec:res}.
@@ -232,9 +232,9 @@ we also used precision, recall, and F1 metrics.
         \hline
         Naive Bayes        & 0.793    & 0.806     & 0.795  & 0.800 \\
         \hline
-        Plain LSTM         &          &           &        &       \\
+        Plain LSTM         & 0.808    & 0.823     & 0.805  & 0.814 \\
         \hline
-        LSTM w/ word2vec   &          &           &        &       \\
+        LSTM w/ word2vec   & 0.886    & 0.892     & 0.889  & 0.891 \\
         \hline
     \end{tabular}
     \caption{Comparison of model performance.}
@@ -243,11 +243,20 @@ we also used precision, recall, and F1 metrics.
 
 \begin{figure}[tbh]
     \centering
-    \includegraphics[width=9cm]{nb-cm.png}
+    \includegraphics[width=4.86cm]{nb-cm.png}
+    \includegraphics[width=5.5cm]{plain_lstm_cm.png}
+    \includegraphics[width=5.5cm]{lstm_w2v_cm.png}
     \caption{Confusion matrix of models.}
     \label{fig:cm}
 \end{figure}
 
+\begin{figure}[tbh]
+    \centering
+    \includegraphics[width=8cm]{val_loss.png}
+    \includegraphics[width=8cm]{val_acc.png}
+    \caption{LSTM loss and accuracy.}
+    \label{fig:cm}
+\end{figure}
 
 
 % - Report insights obtained from the results. Good ways to obtain 
@@ -263,16 +272,15 @@ This implies that the largest factor to performance is the LSTM layer itself.
 % your project, and [G] describe limitations of your project.
 
 In conclusion, we found that an LSTM approach outperformed the Naive Bayes.
-Sarcasm is a complex concept to identify, especially with only text input.
-This project could be extended in the future to work on further
-customized dictionaries with word embeddings for new words like Trump.
-Customized embeddings for names and/or events could lead to even better
-recognition of the meaning behind headlines.
-Additionally, it may be useful to include article text in the dataset
-so that the model can compare the article text and headline text
-because sarcasm comes from a semantic difference between the two.
-In terms of the model, an attention layer or stacked LSTM
-could also be added to see how it affects performance.
+Sarcasm is a complex concept to identify, especially with only text input. This
+project could be extended in the future to work on further customized
+dictionaries with word embeddings for new words like Trump. Custom embeddings
+for names and/or events could lead to even better recognition of the meaning
+behind headlines, hopefully improving performance on sarcasm detection.
+Additionally, it may be useful to include article text in the dataset so that
+the model can compare the article text and headline text because sarcasm comes
+from a semantic difference between the two. In terms of the model, an attention
+layer or stacked LSTM could also be added to see how it affects performance.
 
 \section{Contribution Chart:}
 
