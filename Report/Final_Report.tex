@@ -55,33 +55,29 @@
 % work. It should be no longer than one short paragraph (e.g. 200 
 % words).
 
-This project seeks to explore different sentiment analysis techniques
-in the task of sarcasm detection in newspaper headlines.
-We compare the performance of a Naive Bayes model
-and LSTM model, with and without pre-trained word2vec embeddings,
-on the task.
-Naive Bayes achieved roughly 80 \% accuracy
-and the LSTM approaches achieved roughly 90 \%.
-Different embeddings had a negligible effect on classification,
-but the switch from a Naive Bayes to an LSTM approach showed significant improvement.
+This project seeks to explore different sentiment analysis techniques in the
+task of sarcasm detection in newspaper headlines. We compare the performance of
+a Naive Bayes model and LSTM model, with and without pre-trained word2vec
+embeddings, on the task. Naive Bayes achieved roughly 80\% accuracy and the
+LSTM approaches achieved roughly 90\%. Different embeddings had a negligible
+effect on classification, but the switch from a Naive Bayes to an LSTM approach
+showed significant improvement.
 
 \section{Introduction}
 %Provide an overview of the problem, its significance, potential 
 % beneficiaries of its resolution, the challenges associated with 
 % its resolution, and a summary of your solution and its results.
 
-Sarcasm is defined as the use of words that convey the opposite meaning
-to cause or show irritation. \cite{mw:sarcasm}
-
 Sarcasm is a feature of natural language that is notoriously difficult to
-define and identify in both the spoken and written word.
-The assumption that a statement will be recognized as sarcastic
-is typically contingent upon the listener/reader knowing
-some outside piece of contextual information beforehand.
-However, this external information isn't always known, and even when it is,
-the relationship between it and the statement at hand may not always be clear.
-When this happens, the meaning can be obscured as a result,
-often leading to avoidable scenarios involving miscommunication.
+define and identify in both the spoken and written word. It is defined as "the
+use of words that convey the opposite meaning to cause or show irritation."
+\cite{mw:sarcasm} The assumption that this sarcastic intention will be
+recognized is typically contingent upon the listener/reader knowing some
+outside piece of contextual information beforehand. However, this external
+information isn't always known, and even when it is, the relationship between
+it and the statement at hand may not always be clear. When this happens, the
+meaning can be obscured as a result, often leading to avoidable scenarios
+involving miscommunication.
 
 Recognizing sarcasm typically involves picking up on subtle cues and nuance
 that can be difficult to identify. This can often pose a challenge for
@@ -108,11 +104,77 @@ increasingly apparent over the years. This project shall explore and contrast
 different approaches to disambiguating sarcasm by applying concepts from the
 fields of computational linguistics and machine learning.
 
+
+\section{Data}\label{sec:data}
+% Describe the data used for experiments and report data statistics 
+% as well as interesting observations or patterns in the data.
+
+% When and how dataset was collected Headlines collected from The Onion
+% (sarcastic) and HuffPost (sincere)
+The dataset used for this project is a collection of 28,619 tagged newspaper
+headlines -- 13,635 of which originating from the satirical publication
+\textit{TheOnion} and the other 14,984 coming from the non-satirical
+publication \textit{The Huffington Post} (\textit{HuffPost}). The data was
+collected from TheOnion's ``News in Brief'' and ``News in Photos'' sections and
+HuffPost's news archive page in 2019 \cite{misra2023Sarcasm}.
+
+% Structure of data in dataset
+Each headline is represented as a JSON object with three attributes:
+\begin{itemize}
+    \item \texttt{is\_sarcastic} (integer): the headline's label -- 1 if
+          sarcastic, 0 if not.
+    \item \texttt{headline} (string): the text of the headline, case-converted
+          to be all lowercase.
+    \item \texttt{article\_link} (string): the URL of the referenced article.
+\end{itemize}
+
+Our models used the headline text to predict whether or not the article is
+sarcastic. Article links were not used by the models themselves, but were
+useful in validating the authenticity of the provided headlines. Further
+research might find these links useful for the purposes of obtaining and
+training on the article text instead of / in addition to the headline alone.
+
+The main limitation of this data collection strategy is its limited scope. It
+would be unwise to assume findings on a set of headlines from only two outlets
+are representative of the task of sarcasm detection as a whole. Models might
+pick up on words and phrases that are less indicative of sarcasm and more
+indicative of writing style, formatting guidelines, and/or other details
+particular to one source or the other.
+
+For example, 
+
+% <EXPLORATORY DATA ANALYSIS HERE>
+
+However, despite the lack of broad generalizability, this data presents a
+useful \textit{example} of a sarcasm detection problem from which meaningful
+insights can still be gained. Additionally, data collected from reputable media
+outlets has advantages over data collected from public social media platforms
+(commonly used in sarcasm research).
+
+Since headlines are written in a formal style and are typically proofread,
+their text generally contains less slang, fewer spelling / grammar mistakes,
+and a higher frequency of commonly-used words. The source-based approach to
+data labelling also helps reduce ambiguity about label accuracy, since the
+sarcastic intent of a writer at a satire publication is easy to identify.
+
+% Headlines from sources do not intersect (self-contained)
+
+% However, there are downsides to this dataset.
+% In this case, there are only two news sources being used,
+% and the model could pick up on writing styles or other details instead of sarcasm.
+% There is another potential issue that stems from The Onion's obvious use of sarcasm;
+% in cases where sarcasm is more subtle,
+% a model trained on this dataset could do poorly.
+
+
 \section{Method}
 
-First we took the dataset described in section \ref{sec:data}
-and partitioned it into train, validation, and test sets with a 70/20/10 split respectively.
-The test set labels were then manually verified.
+% Talk about the manual review of test/validation/training data and manual
+% review.
+To begin, the dataset described in section \ref{sec:data} was partitioned 70 /
+20 / 10 into training / validation / test sets respectively. All articles
+labeled as genuine in the test dataset were then manually reviewed to ensure
+there were no incorrect labels.
 
 The steps for tokenizing the dataset were:
 \begin{enumerate}
@@ -145,61 +207,6 @@ embedding layer, LSTM layer, and a fully-connected feedforward network.
 Gradient clipping, early stoppage, batching, dropout,
 and learning rate scheduling were used during training. 
 Results can be found in section \ref{sec:res}.
-
-
-\section{Data}\label{sec:data}
-% Describe the data used for experiments and report data statistics 
-% as well as interesting observations or patterns in the data.
-
-% When and how dataset was collected
-% Headlines collected from The Onion (sarcastic) and HuffPost (sincere)
-The dataset used for this project is a collection
-of 28,619 tagged newspaper headlines --
-of which 13,635 are from the satirical publication \textit{TheOnion},
-the other 14,984 being from the non-satirical publication \textit{The Huffington Post} (\textit{HuffPost}).
-The data was collected from TheOnion's ``News in Brief'' and ``News in Photos'' sections
-and HuffPost's news archive page in 2019 \cite{misra2023Sarcasm}.
-
-% Structure of data in dataset
-For each headline, the dataset contains a JSON object with three attributes:
-\begin{itemize}
-    \item \texttt{is\_sarcastic} (integer): the headline's label -- 1 if
-          sarcastic, 0 if not.
-    \item \texttt{headline} (string): the text of the headline, case-converted
-          to be all lowercase.
-    \item \texttt{article\_link} (string): the URL of the referenced article.
-\end{itemize}
-
-This project used the contents of \texttt{headline} to predict
-the value of \texttt{is\_sarcastic}.
-Values of \texttt{article\_link} were not used to detect sarcasm
-because the labels for sarcasm were source-based,
-so detecting sarcasm from the article link in this dataset is trivial.
-However, for other experiments they may be useful when attempting
-to decipher why certain models made certain predictions.
-
-% Headlines from sources do not intersect (self-contained)
-This dataset has advantages over text that could be found on social media
-platforms because news text is formal in nature.
-This means there are less words outside of the word2vec vocabulary,
-less spelling mistakes, and little to no slang usage.
-Also, because The Onion is openly sarcastic by design,
-there is no ambiguity regarding if labels are correct.
-
-% Limitation of dataset: Only two news sources
-% Additionally, sarcastic headlines from The Onion are obviously sarcastic,
-% so more subtle sarcasm is not captured in the dataset
-However, there are downsides this dataset.
-In this case, there are only two news sources being used,
-and the model could pick up on writing styles or other details instead of sarcasm.
-There is another potential issue that stems from The Onion's obvious use of sarcasm;
-in cases where sarcasm is more subtle,
-a model trained on this dataset could do poorly.
-
-% Talk about the manual review of test/validation/training data and manual review.
-The data was split 70/20/10 into training, validation, and testing sets, each with equal
-proportion of genuine and sarcastic articles. All articles labeled as genuine in the test
-dataset were manually reviewed to ensure there were no incorrect labels.
 
 
 \section{Results}\label{sec:res}
