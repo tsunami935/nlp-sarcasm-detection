@@ -29,6 +29,8 @@
 % other packages
 \usepackage{parskip}
 
+\graphicspath{{figures/}}
+
 \pagestyle{fancy}
 
 \newcommand{\email}[1]{\texttt{\href{mailto:#1}{#1}}}
@@ -239,6 +241,13 @@ we also used precision, recall, and F1 metrics.
     \caption{Comparison of model performance.}
     \label{tab:perf}
 \end{table}
+
+\begin{figure}[tbh]
+    \centering
+    \includegraphics[width=9cm]{nb-cm.png}
+    \caption{Confusion matrix of models.}
+    \label{fig:cm}
+\end{figure}
 
 
 
