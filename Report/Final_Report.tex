@@ -255,14 +255,25 @@ we also used precision, recall, and F1 metrics.
 % insight are ablation analysis, error analysis, and use of 
 % synthetic data.
 
+The LSTM-based models do not show significant differences in performance.
+This implies that the largest factor to performance is the LSTM layer itself.
+
 \section{Conclusion}
 % In one short paragraph concisely summarize the main points and 
 % insights of the project, describe potential directions to extend 
 % your project, and [G] describe limitations of your project.
 
-In conclusion, we found that a neural network approach like the LSTM model was more powerful than a simpler concept like Naive Bayes. Sarcasm is a complex concept to identify, especially with only text input. Having a model that can hit near 90\% accuracy is a good improvement on previous results and shows the power of an LSTM over Bayes.
-
-This project could be extended in the future to work on further customized dictionaries with word embeddings for new words like Trump. Customized embeddings for names and/or events could lead to even better recognition of the meaning behind headlines. In terms of the model, an attention or dropout layer could also be added to see how it affects performance.
+In conclusion, we found that an LSTM approach outperformed the Naive Bayes.
+Sarcasm is a complex concept to identify, especially with only text input.
+This project could be extended in the future to work on further
+customized dictionaries with word embeddings for new words like Trump.
+Customized embeddings for names and/or events could lead to even better
+recognition of the meaning behind headlines.
+Additionally, it may be useful to include article text in the dataset
+so that the model can compare the article text and headline text
+because sarcasm comes from a semantic difference between the two.
+In terms of the model, an attention layer or stacked LSTM
+could also be added to see how it affects performance.
 
 \section{Contribution Chart:}
 
