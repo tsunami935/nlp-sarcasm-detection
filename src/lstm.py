@@ -282,6 +282,7 @@ if __name__ == "__main__":
     pred = []
     y = []
     with torch.no_grad():
+        model.eval()
         for sid, (sent, lengths, labels) in enumerate(test_loader):
             sent = sent.to(device=device)
             labels = labels.to(device=device)
