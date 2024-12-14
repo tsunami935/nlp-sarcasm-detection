@@ -46,7 +46,9 @@ class LSTMBinaryClassifier(nn.Module):
             n, d = embed_weights.size()
             # Load pretrained embeddings
             if n == nwords and d == embed_size:
-                self.embedding = nn.Embedding.from_pretrained(embed_weights, freeze=freeze_embed)
+                self.embedding = nn.Embedding.from_pretrained(
+                    embed_weights, freeze=freeze_embed
+                )
                 # self.embedding.load_state_dict({"weight": embed_weights})
                 # Freeze embeddings
                 if freeze_embed:
@@ -129,7 +131,8 @@ if __name__ == "__main__":
     from torch.nn.utils import clip_grad_norm_
     from gensim.models.keyedvectors import KeyedVectors
 
-    from sklearn.metrics import confusion_matrix
+    from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+    import matplotlib.pyplot as plt
 
     from tokenized_dataloader import SarcasmDataset
 
@@ -138,6 +141,7 @@ if __name__ == "__main__":
     parser.add_argument("cfg", type=str, help="JSON file with configuration parameters")
     parser.add_argument("-d", "--device", type=str, help="CUDA device")
     parser.add_argument("-t", "--test", action="store_true", help="Model to test.")
+    parser.add_argument("--cm", type=str, default="Confusion Matrix", help="Title of confusion matrix plot.")
     args = parser.parse_args()
     with open(args.cfg, "r") as fin:
         cfg: dict[str, Any] = json.load(fin)
@@ -290,3 +294,9 @@ if __name__ == "__main__":
 
     cm = confusion_matrix(y, pred)
     evaluate_confusion_matrix(cm)
+
+    cm_plot = ConfusionMatrixDisplay(cm)
+    cm_plot.display_labels = ["Genuine", "Sarcastic"]
+    cm_plot.plot(cmap = "BuPu")
+    cm_plot.ax_.set_title(args.cm)
+    plt.show()
