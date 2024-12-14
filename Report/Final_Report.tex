@@ -141,32 +141,31 @@ would be unwise to assume findings on a set of headlines from only two outlets
 are representative of the task of sarcasm detection as a whole. Models might
 pick up on words and phrases that are less indicative of sarcasm and more
 indicative of writing style, formatting guidelines, and/or other details
-particular to one source or the other.
+particular to one source or the other. In addition, since the sort of sarcasm
+employed by \textit{TheOnion} tends to be more obvious and outlandish, it's
+possible this data may produce models that fail to identify statements that are
+sarcastic in subtler ways. 
 
-For example,
-
-% <EXPLORATORY DATA ANALYSIS HERE>
+For example, the two bigrams that occur most frequently amongst
+\textit{TheOnion} headlines are [`report', `:'] (427 occurrences) and [`area',
+`man'] (231 occurrences). In a headline like "Report: God directly
+communicating with you through this headline," sarcasm is conveyed through the
+juxtaposition of the formal tone with something later in the text that is
+exaggerated, absurd, etc.. It is unlikely that the presence of phrases like
+"report:" on their own are indicative of sarcasm; models will need to be able
+to pick up on these subtleties in order to be successful.
 
 However, despite the lack of broad generalizability, this data presents a
-useful \textit{example} of a sarcasm detection problem from which meaningful
-insights can still be gained. Additionally, data collected from reputable media
-outlets has advantages over data collected from public social media platforms
-(commonly used in sarcasm research).
+useful example of a sarcasm detection problem from which meaningful insights
+can be gained. Additionally, data collected from reputable media outlets has
+advantages over data collected from public social media platforms, which is
+often used in sarcasm research.
 
-Since headlines are written in a formal style and are typically proofread,
-their text generally contains less slang, fewer spelling / grammar mistakes,
-and a higher frequency of commonly-used words. The source-based approach to
-data labelling also helps reduce ambiguity about label accuracy, since the
-sarcastic intent of a writer at a satire publication is easy to identify.
-
-% Headlines from sources do not intersect (self-contained)
-
-% However, there are downsides to this dataset.
-% In this case, there are only two news sources being used,
-% and the model could pick up on writing styles or other details instead of sarcasm.
-% There is another potential issue that stems from The Onion's obvious use of sarcasm;
-% in cases where sarcasm is more subtle,
-% a model trained on this dataset could do poorly.
+Since headlines are typically proofread and written in a formal style, their
+text tends to contains less slang, fewer spelling and grammar mistakes, and a
+lower frequency of very uncommon words. The source-based approach to data
+labelling also helps reduce ambiguity about label accuracy, since the sarcastic
+intent of a writer at a satire publication is easy to identify.
 
 
 \section{Method}
