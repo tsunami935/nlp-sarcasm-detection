@@ -33,7 +33,7 @@
 
 \newcommand{\email}[1]{\texttt{\href{mailto:#1}{#1}}}
 
-\lhead{\textbf{Project Proposal}}
+\lhead{\textbf{Project Report}}
 \rhead{\textbf{COMP.4420/5420, UMASS Lowell}}
 
 \def\proptitle{COMP4420 Project Report: Sarcasm Detection in Headlines}
@@ -141,7 +141,7 @@ pick up on words and phrases that are less indicative of sarcasm and more
 indicative of writing style, formatting guidelines, and/or other details
 particular to one source or the other.
 
-For example, 
+For example,
 
 % <EXPLORATORY DATA ANALYSIS HERE>
 
@@ -192,7 +192,7 @@ Along with the tokenized dataset,
 lemmatization was used to group words with the same meaning,
 like 'says' and 'said', together.
 Hyperparameter search was done on the smoothing parameter of the model.
-We found that smoothing factor $ \alpha = 1.5 $ performed the best, 
+We found that smoothing factor $ \alpha = 1.5 $ performed the best,
 although other parameters performed closely.
 
 Word2vec embeddings pre-trained on the Google News dataset
@@ -205,7 +205,7 @@ An LSTM model was then trained with and without the pre-trained embeddings.
 The architecture of the LSTM model consisted of
 embedding layer, LSTM layer, and a fully-connected feedforward network.
 Gradient clipping, early stoppage, batching, dropout,
-and learning rate scheduling were used during training. 
+and learning rate scheduling were used during training.
 Results can be found in section \ref{sec:res}.
 
 
@@ -219,6 +219,27 @@ we also used precision, recall, and F1 metrics.
 
 % - Report performance metrics for the method(s) through Figures or 
 % Tables.
+
+\begin{table}[tbh]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        Model              & Accuracy & Precision & Recall & F1    \\
+        \hline
+        Rishabh and Prahal & 0.897    & N/A       & N/A    & N/A   \\
+        Hybrid NN          &          &           &        &       \\
+        \hline
+        Naive Bayes        & 0.793    & 0.806     & 0.795  & 0.800 \\
+        \hline
+        Plain LSTM         &          &           &        &       \\
+        \hline
+        LSTM w/ word2vec   &          &           &        &       \\
+        \hline
+    \end{tabular}
+    \caption{Comparison of model performance.}
+    \label{tab:perf}
+\end{table}
+
 
 
 % - Report insights obtained from the results. Good ways to obtain 
@@ -240,29 +261,29 @@ This project could be extended in the future to work on further customized dicti
     \centering
     \begin{tabular}{c|c|c}
         \hline
-        Student Name \& ID          & Tasks/Subtasks                 & Commentary on Contribution \\
+        Student Name \& ID          & Tasks/Subtasks                 & Commentary on Contribution   \\
         \hline
-        Bui, Nam (\#01963609)       & Tokenized Dictionary           & Created the original files \\
-                                    & Created and Ran Bayes Model    & for both the Bayes and LSTM\\
-                                    & Created LSTM Model             &models, debugged issues with\\
-                                    & Debugged Models                &the models, and helped debug\\ 
-                                    &                                &tokenization issues with the\\ 
-                                    &                                & dataset.                   \\
+        Bui, Nam (\#01963609)       & Tokenized Dictionary           & Created the original files   \\
+                                    & Created and Ran Bayes Model    & for both the Bayes and LSTM  \\
+                                    & Created LSTM Model             & models, debugged issues with \\
+                                    & Debugged Models                & the models, and helped debug \\
+                                    &                                & tokenization issues with the \\
+                                    &                                & dataset.                     \\
         \hline
-        Conners, Riley (\#01943861) & Split Data and Validated Tests &Split the data and manually \\
-                                    & Created Data Loader            &reviewed test set, created  \\
-                                    & Ran Initial Runs of LSTM       &the initial dataloader, and \\
-                                    &                                &performed initial           \\
-                                    &                                &hyperparameter tuning tests \\
-                                    &                                & with LSTM.                 \\
+        Conners, Riley (\#01943861) & Split Data and Validated Tests & Split the data and manually  \\
+                                    & Created Data Loader            & reviewed test set, created   \\
+                                    & Ran Initial Runs of LSTM       & the initial dataloader, and  \\
+                                    &                                & performed initial            \\
+                                    &                                & hyperparameter tuning tests  \\
+                                    &                                & with LSTM.                   \\
         \hline
-        Zuk, Sam (\#01642608)       & Exploratory Data Analysis      & Conducted the exploratory  \\
-                                    & Tokenized Dictionary           & data analysis,\\
-                                    & Created Custom Word Embeddings &helped with tokenizing the  \\
-                                    & Ran Final Run of LSTM Model    &the dictionary and creating \\
-                                    &                                &custom word embeddings, and \\
-                                    &                                &created tables on the final \\
-                                    &                                &data on the run of the LSTM.\\
+        Zuk, Sam (\#01642608)       & Exploratory Data Analysis      & Conducted the exploratory    \\
+                                    & Tokenized Dictionary           & data analysis,               \\
+                                    & Created Custom Word Embeddings & helped with tokenizing the   \\
+                                    & Ran Final Run of LSTM Model    & the dictionary and creating  \\
+                                    &                                & custom word embeddings, and  \\
+                                    &                                & created tables on the final  \\
+                                    &                                & data on the run of the LSTM. \\
         \hline
     \end{tabular}
     \label{tab:my_label}
